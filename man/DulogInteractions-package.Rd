@@ -4,12 +4,12 @@
 \name{DulogInteractions-package}
 \alias{DulogInteractions}
 \alias{DulogInteractions-package}
-\title{DulogInteractions: What the Package Does (One Line, Title Case)}
+\title{DulogInteractions: Compiles data from dulog tags.}
 \description{
-What the package does (one paragraph).
+Dulog tags collect relational data between actors wearing the tags. This package compiles dulog data into meaningul interactions.
 }
 \author{
-\strong{Maintainer}: First Last \email{first.last@example.com} (\href{https://orcid.org/YOUR-ORCID-ID}{ORCID})
+\strong{Maintainer}: Connor Gibbs \email{connor.gibbs@colostate.edu} (\href{https://orcid.org/0000-0002-8852-5594}{ORCID})
 
 }
 \keyword{internal}
