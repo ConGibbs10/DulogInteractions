@@ -5,7 +5,7 @@
 \title{Construct data frame of interactions.}
 \usage{
 construct_interactions(
-  dulogs,
+  pdulogs,
   time_gap = 8,
   directed = FALSE,
   loops = FALSE,
@@ -13,14 +13,14 @@ construct_interactions(
 )
 }
 \arguments{
+\item{pdulogs}{Data frame of pre-processed dulog data.}
+
 \item{time_gap}{A numeric for the maximum number of seconds between meetings
 before a new interaction is defined.}
 
 \item{directed}{Logical indicating whether to treat as directed.}
 
 \item{loops}{Logical indicating whether to include self loops.}
-
-\item{pdulogs}{Data frame of pre-processed dulog data.}
 }
 \value{
 A data frame.

@@ -11,6 +11,7 @@ preprocess_dulogs(
   start_time = lubridate::make_datetime(year = 0),
   end_time = lubridate::make_datetime(year = 9999),
   only_barn = FALSE,
+  time_eps = 2,
   log = NULL
 )
 }
@@ -26,6 +27,9 @@ preprocess_dulogs(
 \item{end_time}{Latest date and time to consider.}
 
 \item{only_barn}{Logical indicating whether to keep only meetings in the barn.}
+
+\item{time_eps}{A numeric for the maximum number of seconds the timestamp's can
+deviate while classifying a meeting as reciprocal (see \code{classify_reciprocal_meetings}).}
 
 \item{log}{File path and name for preprocessing log.}
 }

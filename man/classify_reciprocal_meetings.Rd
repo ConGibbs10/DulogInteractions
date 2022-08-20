@@ -4,13 +4,13 @@
 \alias{classify_reciprocal_meetings}
 \title{Append whether meeting is deemed reciprocal.}
 \usage{
-classify_reciprocal_meetings(dulogs, time_eps = 2)
+classify_reciprocal_meetings(pdulogs, time_eps = 2)
 }
 \arguments{
+\item{pdulogs}{Data frame of pre-processed dulog data.}
+
 \item{time_eps}{A numeric for the maximum number of seconds the timestamp's can
 deviate while classifying a meeting as reciprocal (see details).}
-
-\item{pdulogs}{Data frame of pre-processed dulog data.}
 }
 \value{
 A data frame.
