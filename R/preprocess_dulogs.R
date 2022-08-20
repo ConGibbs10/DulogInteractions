@@ -19,6 +19,8 @@
 #' @param start_time Earliest date and time to consider.
 #' @param end_time Latest date and time to consider.
 #' @param only_barn Logical indicating whether to keep only meetings in the barn.
+#' @param time_eps A numeric for the maximum number of seconds the timestamp's can
+#' deviate while classifying a meeting as reciprocal (see `classify_reciprocal_meetings`).
 #' @param log File path and name for preprocessing log.
 #'
 #' @return A data frame.
@@ -49,6 +51,7 @@ preprocess_dulogs <-
            start_time = lubridate::make_datetime(year = 0000),
            end_time = lubridate::make_datetime(year = 9999),
            only_barn = FALSE,
+           time_eps = 2,
            log = NULL) {
     # check log is path
     if (!is.null(log)) {
@@ -297,6 +300,8 @@ preprocess_dulogs <-
         j_id = ifelse(swapped, rx_id, tx_id),
         i_barn = ifelse(swapped, tx_barn, rx_barn),
         j_barn = ifelse(swapped, rx_barn, tx_barn),
+        i_range_date = lubridate::as_datetime(ifelse(swapped, tx_range_date, rx_range_date)),
+        j_range_date = lubridate::as_datetime(ifelse(swapped, rx_range_date, tx_range_date)),
         dplyr::across(c(
           'rx_node', 'tx_node', 'i_node', 'j_node'
         ), as.character)
@@ -312,6 +317,8 @@ preprocess_dulogs <-
           'tx_id',
           'rx_barn',
           'tx_barn',
+          'rx_range_date',
+          'tx_range_date',
           'rssi',
           'barn',
           'i_node',
@@ -319,42 +326,29 @@ preprocess_dulogs <-
           'i_id',
           'j_id',
           'i_barn',
-          'j_barn'
+          'j_barn',
+          'i_range_date',
+          'j_range_date'
         )
       ),
-      dplyr::everything(),-start,-end)
+      dplyr::everything(),
+      -start,
+      -end)
     if (!is.null(log)) {
       acc <- c(acc, organize_rows_cols = nrow(fdulogs))
+    }
+    dulogs <- fdulogs
+
+    # check reciprocated meetings
+    fdulogs <- classify_reciprocal_meetings(dulogs, time_eps = time_eps)
+    if (!is.null(log)) {
+      acc <- c(acc, classify_reciprocal_meetings = nrow(fdulogs))
     }
     dulogs <- fdulogs
 
     # write logs if necessary
     if (!is.null(log)) {
       message('Writing the preprocessing log can be time consuming. Patience is a virtue.')
-      #---------------------------------------------------------------------------
-      # loops and bidirectional edges
-      #---------------------------------------------------------------------------
-      graph_properties <- list()
-      gdulogs <- dulogs %>%
-        dtplyr::lazy_dt() %>%
-        dplyr::group_by(., year, meeting_date, i_node, j_node) %>%
-        dplyr::mutate(., unique_meeting = dplyr::cur_group_id()) %>%
-        dplyr::ungroup() %>%
-        dplyr::as_tibble()
-
-      # count the number of loops
-      graph_properties$loops <-
-        dplyr::filter(dulogs, rx_node == tx_node)
-      # reciprocated or bidirectional edges
-      recip_ids <- gdulogs %>%
-        dplyr::count(., year, unique_meeting) %>%
-        dplyr::filter(., n > 1)
-      graph_properties$reciprocated_edges <- gdulogs %>%
-        dplyr::filter(., unique_meeting %in% recip_ids$unique_meeting) %>%
-        dplyr::nest_by(., year, unique_meeting)
-      # collapsed edges, no double counting reciprocated edges
-      graph_properties$collapsed_edges <-
-        dplyr::nest_by(gdulogs, year, unique_meeting)
 
       #---------------------------------------------------------------------------
       # trace items
@@ -382,7 +376,6 @@ preprocess_dulogs <-
           n_meetings = unname(acc),
           n_removed = abs(nrm)
         )
-      ltrace$graph_properties <- graph_properties
       # write trace
       readr::write_rds(ltrace, file = tname, compress = 'gz')
 
@@ -434,18 +427,15 @@ preprocess_dulogs <-
         sum(!ltrace$profiles$duplicates$same_rssis),
         '\n',
         'Near duplicates are defined AFTER removing all duplicates\n\n',
-        '----Graph Considerations (see profiles$graph_properties for details)----\n',
+        '----Graph Considerations----\n',
         '  Loops (i.e. sender and receiver are the same actor):',
-        nrow(ltrace$graph_properties$loops),
+        sum(dulogs$rx_node == dulogs$tx_node),
         '\n',
-        '  Reciprocated meetings, excluding loops (i.e. sender logged receiver and receiver logged sender at the same time, making a bidirectional edge):',
-        nrow(ltrace$graph_properties$reciprocated_edges),
+        '  Reciprocated meetings, excluding loops (i.e. the sender received the receiver signal within time_eps of the receiver receiving the sender signal, making a bidirectional edge):',
+        sum(dulogs$reciprocated),
         '\n',
         '  Unreciprocated meetings, including loops (i.e. sender logged receiver but receiver did not log sender at the same time, making unidirectional edge):',
-        nrow(ltrace$graph_properties$collapsed_edges) - nrow(ltrace$graph_properties$reciprocated_edges),
-        '\n',
-        '  Collapsed meetings, including loops (i.e. unidirectional and bidirectional edges are tagged equally as one undirected edge; no double counting reciprocated edges):',
-        nrow(ltrace$graph_properties$collapsed_edges),
+        sum(!dulogs$reciprocated),
         file = lname
       )
     }
