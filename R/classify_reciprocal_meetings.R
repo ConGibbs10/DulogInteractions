@@ -25,14 +25,14 @@
 #' pdulogs <- preprocess_dulogs(dulogs)
 #' classify_reciprocal_meetings(pdulogs, time_eps = 2)
 #' }
-classify_reciprocal_meetings <- function(dulogs, time_eps = 2) {
+classify_reciprocal_meetings <- function(pdulogs, time_eps = 2) {
   # check time gap
   if (length(time_eps) > 1 ||
       !is.numeric(time_eps) || time_eps < 0) {
     stop('Argument time_eps must be a non-negative numeric scalar.')
   }
 
-  intervals <- dulogs %>%
+  intervals <- pdulogs %>%
     dplyr::mutate(
       .,
       start = meeting_date - lubridate::seconds(time_eps),
@@ -41,17 +41,17 @@ classify_reciprocal_meetings <- function(dulogs, time_eps = 2) {
     dplyr::select(., year, i_node, j_node, start, end) %>%
     dplyr::distinct()
 
-  dulogs <-
-    dplyr::mutate(dulogs, meeting_date_end = meeting_date, .after = meeting_date)
+  pdulogs <-
+    dplyr::mutate(pdulogs, meeting_date_end = meeting_date, .after = meeting_date)
 
   # use data.table to find reciprocated meetings
   ## check if both swapped and nonswapped in overlaps
-  data.table::setDT(dulogs)
+  data.table::setDT(pdulogs)
   data.table::setDT(intervals)
   data.table::setkey(intervals, year, i_node, j_node, start, end)
   reciprocated <-
     data.table::foverlaps(
-      dulogs,
+      pdulogs,
       by.x = c(
         'year',
         'i_node',
@@ -66,7 +66,7 @@ classify_reciprocal_meetings <- function(dulogs, time_eps = 2) {
 
   # summarize and return
   reciprocated <- tibble::as_tibble(reciprocated)
-  dulogs <- dulogs %>%
+  pdulogs <- pdulogs %>%
     tibble::as_tibble() %>%
     dplyr::mutate(
       .,
@@ -78,5 +78,5 @@ classify_reciprocal_meetings <- function(dulogs, time_eps = 2) {
                      by = c('year', 'i_node', 'j_node', 'start', 'end')) %>%
     dplyr::select(.,-meeting_date_end,-start,-end)
 
-  return(dulogs)
+  return(pdulogs)
 }
