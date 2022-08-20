@@ -4,3 +4,8 @@ inst/doc
 .Rdata
 .httr-oauth
 .DS_Store
+
+dulogs
+dulogs-raw
+logs
+rmd
