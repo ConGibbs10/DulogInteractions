@@ -165,7 +165,7 @@ construct_interactions <-
       dplyr::as_tibble()
 
     if (!is.null(log)) {
-      message('Writing the preprocessing log can be time consuming. Patience is a virtue.')
+      message('Writing logs can be time consuming. Patience is a virtue.')
       ltrace$output <- interactions
       readr::write_rds(ltrace, file = tname, compress = 'gz')
     }
