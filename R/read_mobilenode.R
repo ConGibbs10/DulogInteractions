@@ -37,9 +37,11 @@ read_mobilenode <-
 
     # read and combine data
     mnData <- mnData %>%
-      purrr::map_dfr(., function(f)
+      purrr::map(., function(f)
         purrr::quietly(readr::read_csv)(f)$result %>%
           tibble::add_column(., origin = basename(f), .before = 1)) %>%
+      purrr::discard(., ~nrow(.x) == 0) %>%
+      dplyr::bind_rows() %>%
       # format column names
       janitor::clean_names()
 

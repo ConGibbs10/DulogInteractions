@@ -102,7 +102,7 @@ read_dulogs <-
       dplyr::left_join(., timeframe, by = 'year') %>%
       # append the bird id
       dplyr::left_join(.,
-                       dplyr::select(birds, year, node = tag, node_id = bird_id),
+                       dplyr::select(birds, year, node = tag, node_id = band_id),
                        by = c('year', 'node'))
     if (!is.null(log)) {
       acc <- c(acc, bind_pkg_data = nrow(firData))
@@ -225,7 +225,7 @@ read_dulogs <-
 
     # write logs if necessary
     if (!is.null(log)) {
-      message('Writing the preprocessing log can be time consuming. Patience is a virtue.')
+      message('Writing logs can be time consuming. Patience is a virtue.')
 
       #---------------------------------------------------------------------------
       # trace items
