@@ -12,8 +12,99 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+
 ```
 
 ```{r setup}
-library(DulogInteractions)
+devtools::load_all()
+knitr::opts_knit$set(root.dir = rprojroot::find_rstudio_root_file())
+
 ```
+
+## Preparing the raw dulogs data
+
+## Example usage
+
+```{r, eval=FALSE}
+# set up logs for each function
+baselog <- 'logs/vignette'
+
+# read and combine mobile node and in range data according to the requested `time_eps`
+#  and `barn_rule`
+el <- read_dulogs(
+  paths = c(mobilenode = 'dulogs/2022', inrange = 'dulogs/2022'),
+  patterns = c(mobilenode = 'MN_DATA', inrange = 'MN_RANGE'),
+  year = 2022,
+  time_eps = 2,
+  barn_rule = 'or',
+  log = file.path(baselog, 'read_dulogs')
+) %>%
+  # preprocess dulog meetings to remove data oddities and filter meetings by rssi,
+  #  meeting times, and whether to keep all meetings or only those in a barn. The
+  #  `time_eps` is used to classify meetings as reciprocal meetings.
+  preprocess_dulogs(
+    .,
+    min_rssi = -Inf,
+    max_rssi = 15,
+    start_time = '0000-01-01 UTC',
+    end_time = '9999-01-01 UTC',
+    only_barn = FALSE,
+    time_eps = 2,
+    log = file.path(baselog, 'preprocess_dulogs')
+  ) %>%
+  # construct interactions according to the `time_gap`. A gap of at least `time_gap`
+  #  seconds between contiguous meetings necessitates a new interaction. The user
+  #  also specifies whether to treat meetings as directed or undirected, and whether
+  #  to remove self loops. If undirected edges are requested, reciprocal edges taking
+  #  place at the same time are collapsed into one meeting.
+  construct_interactions(.,
+                         time_gap = 8,
+                         directed = FALSE,
+                         loops = FALSE,
+                         log = file.path(baselog, 'construct_interactions')) %>%
+  # filter the interactions according to preferences and convert to an edgelist
+  as_edgelist(
+    .,
+    min_secs_elapsed = 4,
+    max_secs_elapsed = Inf,
+    min_proportion_barn = 0,
+    max_proportion_barn = 1
+  )
+
+head(el)
+```
+
+```{r, echo=FALSE}
+el <- read_dulogs(
+  paths = c(mobilenode = 'dulogs/2022', inrange = 'dulogs/2022'),
+  patterns = c(mobilenode = 'MN_DATA', inrange = 'MN_RANGE'),
+  year = 2022,
+  time_eps = 2,
+  barn_rule = 'or'
+) %>%
+  preprocess_dulogs(
+    .,
+    min_rssi = -Inf,
+    max_rssi = 15,
+    start_time = '0000-01-01 UTC',
+    end_time = '9999-01-01 UTC',
+    only_barn = FALSE,
+    time_eps = 2
+  ) %>%
+  construct_interactions(
+    .,
+    time_gap = 8,
+    directed = FALSE,
+    loops = FALSE
+  ) %>%
+  as_edgelist(
+    .,
+    min_secs_elapsed = 4,
+    max_secs_elapsed = Inf,
+    min_proportion_barn = 0,
+    max_proportion_barn = 1
+  )
+
+head(el)
+```
+
