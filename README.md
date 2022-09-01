@@ -1,5 +1,3 @@
-Pipeline
-================
 Connor Gibbs
 2022-08-02
 
@@ -133,9 +131,10 @@ record when a bird is registered by a base station. The base stations
 are located in the barns, so we use these data as proxy for whether a
 bird is in the barn. There is imprecision in the clocks, so these files
 are combined using a fuzzy join on year, node, and meeting time. We deem
-a bird in the barn at the time of their meeting if their meeting time is
-within `time_eps` of any log corresponding to the bird in the in the
-range data. For example, suppose an epsilon of 2 is provided. If bird
+a bird in the barn at the time of their meeting if they were registered
+by the base station in the in range data within `time_eps` (inclusive,
+either before or after) seconds of their meeting time. For example,
+suppose an epsilon of 2 is provided. If bird
 ![A](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;A "A")
 met bird
 ![B](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;B "B")
@@ -155,8 +154,8 @@ is deemed in the barn while bird
 ![B](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;B "B")
 is deemed out of the barn. Even still, if either the sender, receiver,
 or both birds are deemed in the barn during their meeting time, then the
-meeting is said to be in the barn. The following describe each column of
-the resulting data frame:
+meeting is said to be in the barn if the barn rule is set to ‘or’. The
+following describe each column of the resulting data frame:
 
 -   `year` (`chr`): year under study,
 -   `origin` (`chr`): mobile node data file containing this meeting,
@@ -254,7 +253,7 @@ column of the resulting data frame:
 The choice of `time_eps` in the reading step will not impact the
 preprocessing step unless `only_barn` is set to `TRUE`. In this case, a
 larger `time_eps` will result in fewer meetings excluded because of the
-`only_barn` constraint. Assuming a `time_eps` of three, the following
+`only_barn` constraint. Assuming a `time_eps` of two, the following
 represents the number of meetings remaining (and removed) after each
 consideration of the preprocessing step when the arguments are set to
 the defaults (i.e. `max_rssi` of 15; all other arguments such as
@@ -280,9 +279,9 @@ While not strictly necessary, the same preprocessing used to address
 known data limitations is conducted on the in range data during data
 reading step. This preprocessing and logging of the in range data is
 largely to document any issues with the in range data. Assuming a
-`time_eps` of three, the following represents the number of pulses by
-the base stations (in range data) remaining (and removed) at each stage
-of preprocessing:
+`time_eps` of two, the following represents the number of pulses by the
+base stations (in range data) remaining (and removed) at each stage of
+preprocessing:
 
     #> # A tibble: 8 × 3
     #>   description     n_meetings n_removed
