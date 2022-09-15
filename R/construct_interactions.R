@@ -97,6 +97,9 @@ construct_interactions <-
             as.double(pair$meeting_date - dplyr::lead(pair$meeting_date, n = 1),
                       units = 'secs')
           intg <- cumsum(tdiff <= -time_gap)
+          if(intg[1] != 1) {
+            intg <- intg + (1 - intg[1])
+          }
           intg <- c(NA, intg[-length(intg)])
           # change the first entry accordingly
           tdiff12 <-
