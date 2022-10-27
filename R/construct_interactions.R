@@ -56,27 +56,6 @@ construct_interactions <-
                            rssi,
                            barn)
     } else {
-      # how do we want to deal with difference in RSSI when a logs b and b logs a?
-
-      # keep the smallest?
-      # gdf <- pdulogs %>%
-      #   dplyr::select(.,
-      #                 year,
-      #                 meeting_date,
-      #                 from_node = i_node,
-      #                 to_node = j_node,
-      #                 rssi,
-      #                 barn) %>%
-      #   dtplyr::lazy_dt() %>%
-      #   dplyr::group_by(., year, meeting_date, from_node, to_node) %>%
-      #   dplyr::mutate(., barn = any(barn)) %>%
-      #   dplyr::slice_min(., rssi) %>%
-      #   # keep only one row in case of ties
-      #   dplyr::slice(., 1) %>%
-      #   dplyr::ungroup() %>%
-      #   tibble::as_tibble()
-
-      # keep all of them?
       gdf <- dplyr::select(pdulogs,
                            year,
                            meeting_date,
