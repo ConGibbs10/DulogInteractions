@@ -26,6 +26,17 @@ library(dplyr)
 library(DulogInteractions)
 ```
 
+## Installing DulogsInteractions
+
+Without uploading the Dulogs data as raw package data, installing the DulogsInteractions package is slightly more tricky. Follow these steps:
+
+1. Clone the repository to your local machine. See this [guide](https://www.w3docs.com/learn-git/git-clone.html), for example.
+2. Add the `dulogs-raw` data folder to the `DulogsInteractions` directory.
+3. Open the R project corresponding to the cloned repository.
+4. Run `inst/scripts/setup.R`.
+
+You should now have `DulogsInteractions` as a library and be able to recreate the following examples. If the package is ever updated on GitHub, you will want to pull the updates (see [guide](https://www.w3docs.com/learn-git/git-pull.html), for example) and rerun `inst/scripts/setup.R`.
+
 ## DulogsInteractions Pipeline
 
 The DulogsInteractions pipeline is seperated into three steps:

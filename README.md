@@ -3,6 +3,25 @@ Connor Gibbs
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+## Installing DulogsInteractions
+
+Without uploading the Dulogs data as raw package data, installing the
+DulogsInteractions package is slightly more tricky. Follow these steps:
+
+1.  Clone the repository to your local machine. See this
+    [guide](https://www.w3docs.com/learn-git/git-clone.html), for
+    example.
+2.  Add the `dulogs-raw` data folder to the `DulogsInteractions`
+    directory.
+3.  Open the R project corresponding to the cloned repository.
+4.  Run `inst/scripts/setup.R`.
+
+You should now have `DulogsInteractions` as a library and be able to
+recreate the following examples. If the package is ever updated on
+GitHub, you will want to pull the updates (see
+[guide](https://www.w3docs.com/learn-git/git-pull.html), for example)
+and rerun `inst/scripts/setup.R`.
+
 ## DulogsInteractions Pipeline
 
 The DulogsInteractions pipeline is seperated into three steps:
@@ -72,7 +91,7 @@ head(el)
     #> 3 2022  12        63                   218              4254
     #> 4 2022  12        64                    94              4028
     #> 5 2022  12        66                    14                76
-    #> 6 2022  12        68                   564             54980
+    #> 6 2022  12        68                   563             54946
 
 ### Raw package data
 
@@ -88,10 +107,10 @@ scripts, simply run them.
 At the very least, this comma separated value file *must* contain
 columns:
 
--   `year`: year under study, formatted as YYYY,
--   `tag`: numeric value indicating the Dulog tag ID deployed in the
-    year under study,
--   `band_id`: unique 9-digit band number describing the bird.
+- `year`: year under study, formatted as YYYY,
+- `tag`: numeric value indicating the Dulog tag ID deployed in the year
+  under study,
+- `band_id`: unique 9-digit band number describing the bird.
 
 Other columns are tag attributes which will be helpful in the analysis
 phase. Examples may include things like sex of the bird, mating tag,
@@ -104,21 +123,21 @@ and/or other identifying information.
 At the very least, this comma separated value file *must* contain
 columns:
 
--   `year`: year under study, formatted as YYYY,
--   `tz`: timezone as it appears in the [timezone
-    database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones),
--   `start_year`: year when tags are turned on, formatted as YYYY,
--   `start_month`: month when tags are turned on, formatted as MM,
--   `start_day`: day when tags are turned on, formatted as DD,
--   `start_hour`: hour (using a [24-hour
-    clock](https://en.wikipedia.org/wiki/24-hour_clock)) when tags are
-    turned on, formatted as HH,
--   `end_year`: year when tags are turned off, formatted as YYYY,
--   `end_month`: month when tags are turned off, formatted as MM,
--   `end_day`: day when tags are turned off, formatted as DD,
--   `end_hour`: hour (using a [24-hour
-    clock](https://en.wikipedia.org/wiki/24-hour_clock)) when tags are
-    turned off, formatted as HH.
+- `year`: year under study, formatted as YYYY,
+- `tz`: timezone as it appears in the [timezone
+  database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones),
+- `start_year`: year when tags are turned on, formatted as YYYY,
+- `start_month`: month when tags are turned on, formatted as MM,
+- `start_day`: day when tags are turned on, formatted as DD,
+- `start_hour`: hour (using a [24-hour
+  clock](https://en.wikipedia.org/wiki/24-hour_clock)) when tags are
+  turned on, formatted as HH,
+- `end_year`: year when tags are turned off, formatted as YYYY,
+- `end_month`: month when tags are turned off, formatted as MM,
+- `end_day`: day when tags are turned off, formatted as DD,
+- `end_hour`: hour (using a [24-hour
+  clock](https://en.wikipedia.org/wiki/24-hour_clock)) when tags are
+  turned off, formatted as HH.
 
 <img src="rmd/pipeline_folder/timeframe_raw_csv.png" width="100%" style="display: block; margin: auto;" />
 
@@ -157,22 +176,22 @@ or both birds are deemed in the barn during their meeting time, then the
 meeting is said to be in the barn if the barn rule is set to ‘or’. The
 following describe each column of the resulting data frame:
 
--   `year` (`chr`): year under study,
--   `origin` (`chr`): mobile node data file containing this meeting,
--   `meeting_date` (`POSIXct`): Unix timestamp for meeting, formatted as
-    YYYY-MM-DD HH:MM:SS,
--   `rx_node` (`chr`): receiver tag, must be coercible to a numeric,
--   `tx_node` (`chr`): sender tag, must be coercible to a numeric,
--   `rssi` (`num`): signal strength for meeting, highly positive implies
-    the birds were closer in physical proximity,
--   `received date` (`POSIXct`): Unix timestamp for data retrieval,
-    formatted as YYYY-MM-DD HH:MM:SS,
--   `rx_barn` (`logi`): indicator of whether the meeting time is within
-    `time_eps` of a base station log corresponding to the receiver,
--   `tx_barn` (`logi`): indicator of whether the meeting time is within
-    `time_eps` of a base station log corresponding to the sender,
--   `barn` (`logi`): indicator of whether either the sender, receiver,
-    or both was identified in the barn at the time of meeting.
+- `year` (`chr`): year under study,
+- `origin` (`chr`): mobile node data file containing this meeting,
+- `meeting_date` (`POSIXct`): Unix timestamp for meeting, formatted as
+  YYYY-MM-DD HH:MM:SS,
+- `rx_node` (`chr`): receiver tag, must be coercible to a numeric,
+- `tx_node` (`chr`): sender tag, must be coercible to a numeric,
+- `rssi` (`num`): signal strength for meeting, highly positive implies
+  the birds were closer in physical proximity,
+- `received date` (`POSIXct`): Unix timestamp for data retrieval,
+  formatted as YYYY-MM-DD HH:MM:SS,
+- `rx_barn` (`logi`): indicator of whether the meeting time is within
+  `time_eps` of a base station log corresponding to the receiver,
+- `tx_barn` (`logi`): indicator of whether the meeting time is within
+  `time_eps` of a base station log corresponding to the sender,
+- `barn` (`logi`): indicator of whether either the sender, receiver, or
+  both was identified in the barn at the time of meeting.
 
 <img src="rmd/pipeline_folder/read_dulogs.png" width="100%" style="display: block; margin: auto;" />
 
@@ -209,44 +228,44 @@ preferences (e.g., see `i_node` and `j_node` which are helpful at
 constructing undirected interactions). The following describe each
 column of the resulting data frame:
 
--   `year` (`chr`): year under study,
--   `origin` (`chr`): mobile node data file containing this meeting,
--   `meeting_date` (`POSIXct`): Unix timestamp for meeting, formatted as
-    YYYY-MM-DD HH:MM:SS,
--   `rx_node` (`chr`): receiver tag, must be coercible to a numeric,
--   `tx_node` (`chr`): sender tag, must be coercible to a numeric,
--   `rx_id` (`chr`): receiver tag description from raw package data,
--   `tx_id` (`chr`): sender tag description from raw package data,
--   `rx_barn` (`logi`): indicator of whether the meeting time is within
-    `time_eps` of a base station log corresponding to the receiver,
--   `tx_barn` (`logi`): indicator of whether the meeting time is within
-    `time_eps` of a base station log corresponding to the sender,
--   `rssi` (`num`): signal strength for meeting, highly positive implies
-    the birds were closer in physical proximity,
--   `barn` (`logi`): indicator of whether either the sender, receiver,
-    or both was identified in the barn at the time of meeting.
--   `i_node` (`chr`): tag with smallest sorted value,
-    ![i](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;i "i"),
-    must be coercible to a numeric,
--   `j_node` (`chr`): tag with largest sorted value,
-    ![j](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;j "j"),
-    must be coercible to a numeric,
--   `i_id` (`chr`): tag
-    ![i](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;i "i")
-    description from raw package data,
--   `j_id` (`chr`): tag
-    ![j](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;j "j")
-    description from raw package data
--   `i_barn` (`lgl`): indicator of whether the meeting time is within
-    `time_eps` of a base station log corresponding to tag
-    ![i](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;i "i")
--   `j_barn` (`lgl`): indicator of whether the meeting time is within
-    `time_eps` of a base station log corresponding to tag
-    ![j](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;j "j")
--   `received_date` (`POSIXct`): Unix timestamp for data retrieval,
-    formatted as YYYY-MM-DD HH:MM:SS,
--   `swapped` (`lgl`): indicator of whether the values of `rx_node` and
-    `tx_node` were swapped to create `i_node` and `j_node`.
+- `year` (`chr`): year under study,
+- `origin` (`chr`): mobile node data file containing this meeting,
+- `meeting_date` (`POSIXct`): Unix timestamp for meeting, formatted as
+  YYYY-MM-DD HH:MM:SS,
+- `rx_node` (`chr`): receiver tag, must be coercible to a numeric,
+- `tx_node` (`chr`): sender tag, must be coercible to a numeric,
+- `rx_id` (`chr`): receiver tag description from raw package data,
+- `tx_id` (`chr`): sender tag description from raw package data,
+- `rx_barn` (`logi`): indicator of whether the meeting time is within
+  `time_eps` of a base station log corresponding to the receiver,
+- `tx_barn` (`logi`): indicator of whether the meeting time is within
+  `time_eps` of a base station log corresponding to the sender,
+- `rssi` (`num`): signal strength for meeting, highly positive implies
+  the birds were closer in physical proximity,
+- `barn` (`logi`): indicator of whether either the sender, receiver, or
+  both was identified in the barn at the time of meeting.
+- `i_node` (`chr`): tag with smallest sorted value,
+  ![i](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;i "i"),
+  must be coercible to a numeric,
+- `j_node` (`chr`): tag with largest sorted value,
+  ![j](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;j "j"),
+  must be coercible to a numeric,
+- `i_id` (`chr`): tag
+  ![i](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;i "i")
+  description from raw package data,
+- `j_id` (`chr`): tag
+  ![j](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;j "j")
+  description from raw package data
+- `i_barn` (`lgl`): indicator of whether the meeting time is within
+  `time_eps` of a base station log corresponding to tag
+  ![i](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;i "i")
+- `j_barn` (`lgl`): indicator of whether the meeting time is within
+  `time_eps` of a base station log corresponding to tag
+  ![j](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;j "j")
+- `received_date` (`POSIXct`): Unix timestamp for data retrieval,
+  formatted as YYYY-MM-DD HH:MM:SS,
+- `swapped` (`lgl`): indicator of whether the values of `rx_node` and
+  `tx_node` were swapped to create `i_node` and `j_node`.
 
 <img src="rmd/pipeline_folder/preprocess_dulogs.png" width="100%" style="display: block; margin: auto;" />
 
@@ -325,27 +344,27 @@ are excluded from consideration.
 
 For now, the following describe each column of the resulting data frame:
 
--   `year` (`chr`): year under study,
--   `from_node` (`chr`): if directed, sender tag; otherwise, tag with
-    smallest sorted value,
--   `to_node` (`chr`): if directed, receiver tag; otherwise, tag with
-    the largest sorted value,
--   `interaction_group` (`dbl`): counter for interaction by pairs of
-    nodes in a given year; each row is uniquely identified by year, from
-    and to nodes, and the interaction group,
--   `start_time` (`POSIXct`): Unix timestamp marking the beginning of
-    the interaction, formatted as YYYY-MM-DD HH:MM:SS,
--   `end_time` (`POSIXct`): Unix timestamp marking the end of the
-    interaction, formatted as YYYY-MM-DD HH:MM:SS,
--   `secs_elapsed` (`dbl`): seconds elapsed in the interaction,
--   `num_meetings` (`int`): number of meetings recorded in the
-    interaction,
--   `meetings_per_sec` (`dbl`): number of meetings recorded per second
-    in the interaction,
--   `rssi_min` (`dbl`): minimum RSSI in the interaction,
--   `rssi_med` (`dbl`): median RSSI in the interaction,
--   `rssi_mean` (`dbl`): mean RSSI in the interaction,
--   `rssi_max` (`dbl`): maximum RSSI in the interaction.
+- `year` (`chr`): year under study,
+- `from_node` (`chr`): if directed, sender tag; otherwise, tag with
+  smallest sorted value,
+- `to_node` (`chr`): if directed, receiver tag; otherwise, tag with the
+  largest sorted value,
+- `interaction_group` (`dbl`): counter for interaction by pairs of nodes
+  in a given year; each row is uniquely identified by year, from and to
+  nodes, and the interaction group,
+- `start_time` (`POSIXct`): Unix timestamp marking the beginning of the
+  interaction, formatted as YYYY-MM-DD HH:MM:SS,
+- `end_time` (`POSIXct`): Unix timestamp marking the end of the
+  interaction, formatted as YYYY-MM-DD HH:MM:SS,
+- `secs_elapsed` (`dbl`): seconds elapsed in the interaction,
+- `num_meetings` (`int`): number of meetings recorded in the
+  interaction,
+- `meetings_per_sec` (`dbl`): number of meetings recorded per second in
+  the interaction,
+- `rssi_min` (`dbl`): minimum RSSI in the interaction,
+- `rssi_med` (`dbl`): median RSSI in the interaction,
+- `rssi_mean` (`dbl`): mean RSSI in the interaction,
+- `rssi_max` (`dbl`): maximum RSSI in the interaction.
 
 <img src="rmd/pipeline_folder/construct_interactions.png" width="100%" style="display: block; margin: auto;" />
 
@@ -372,12 +391,12 @@ sender node (from) from the receiver node (to).
 
 For now, the following describe each column of the resulting data frame:
 
--   `year` (`chr`): year under study,
--   `from_node` (`chr`): if directed, sender tag; otherwise, tag with
-    smallest sorted value,
--   `to_node` (`chr`): if directed, receiver tag; otherwise, tag with
-    the largest sorted value,
--   `num_interactions` (`int`): total number of interactions of interest
-    (i.e. satisfying the arguments of the function).
+- `year` (`chr`): year under study,
+- `from_node` (`chr`): if directed, sender tag; otherwise, tag with
+  smallest sorted value,
+- `to_node` (`chr`): if directed, receiver tag; otherwise, tag with the
+  largest sorted value,
+- `num_interactions` (`int`): total number of interactions of interest
+  (i.e. satisfying the arguments of the function).
 
 <img src="rmd/pipeline_folder/as_edgelist.png" width="100%" style="display: block; margin: auto;" />

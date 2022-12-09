@@ -5,7 +5,8 @@ inst/doc
 .httr-oauth
 .DS_Store
 
-dulogs
 dulogs-raw
+dulogs/2021/*
+dulogs/2022/*
 logs
 rmd
