@@ -41,8 +41,8 @@ read_mobilenode <-
         purrr::quietly(readr::read_csv)(f)$result %>%
           tibble::add_column(., origin = basename(f), .before = 1)) %>%
       purrr::discard(., ~nrow(.x) == 0) %>%
-      purrr::map(., function(f) if("problems" %in% names(.)) mutate(f, problems=as.character(problems))) %>%
-      dplyr::bind_rows() %>%
+      purrr::map(., function(f) if("problems" %in% names(f)) {
+        dplyr::mutate(f, problems=as.character(problems))} else {f}) %>%      dplyr::bind_rows() %>%
       # format column names
       janitor::clean_names()
 
