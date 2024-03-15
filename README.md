@@ -1,9 +1,11 @@
-Connor Gibbs
-2022-08-02
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-## Installing DulogsInteractions
+# DulogInteractions
+
+This R package is designed for processing data from Dulog Sensors.
+
+## Installing DulogInteractions
 
 Without uploading the Dulogs data as raw package data, installing the
 DulogsInteractions package is slightly more tricky. Follow these steps:
@@ -24,7 +26,7 @@ and rerun `inst/scripts/setup.R`.
 
 ## DulogsInteractions Pipeline
 
-The DulogsInteractions pipeline is seperated into three steps:
+The DulogsInteractions pipeline is separated into three steps:
 
 1.  Reading the data with `read_dulogs`.
 2.  Preprocessing the data with `preprocess_dulogs`.
@@ -116,8 +118,6 @@ Other columns are tag attributes which will be helpful in the analysis
 phase. Examples may include things like sex of the bird, mating tag,
 and/or other identifying information.
 
-<img src="rmd/pipeline_folder/birds_raw_csv.png" width="100%" style="display: block; margin: auto;" />
-
 **`timeframe-raw.csv`**
 
 At the very least, this comma separated value file *must* contain
@@ -139,8 +139,6 @@ columns:
   clock](https://en.wikipedia.org/wiki/24-hour_clock)) when tags are
   turned off, formatted as HH.
 
-<img src="rmd/pipeline_folder/timeframe_raw_csv.png" width="100%" style="display: block; margin: auto;" />
-
 ### Reading the dulogs data
 
 There are two sources of data: mobile node data files and in range data
@@ -153,28 +151,13 @@ are combined using a fuzzy join on year, node, and meeting time. We deem
 a bird in the barn at the time of their meeting if they were registered
 by the base station in the in range data within `time_eps` (inclusive,
 either before or after) seconds of their meeting time. For example,
-suppose an epsilon of 2 is provided. If bird
-![A](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;A "A")
-met bird
-![B](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;B "B")
-at time
-![t](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;t "t"),
-and bird
-![A](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;A "A")
-is listed in the in range data at time
-![t+1](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;t%2B1 "t+1")
-whereas bird
-![B](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;B "B")
-is listed at
-![t+3](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;t%2B3 "t+3"),
-then bird
-![A](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;A "A")
-is deemed in the barn while bird
-![B](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;B "B")
-is deemed out of the barn. Even still, if either the sender, receiver,
-or both birds are deemed in the barn during their meeting time, then the
-meeting is said to be in the barn if the barn rule is set to ‘or’. The
-following describe each column of the resulting data frame:
+suppose an epsilon of 2 is provided. If bird $A$ met bird $B$ at time
+$t$, and bird $A$ is listed in the in range data at time $t+1$ whereas
+bird $B$ is listed at $t+3$, then bird $A$ is deemed in the barn while
+bird $B$ is deemed out of the barn. Even still, if either the sender,
+receiver, or both birds are deemed in the barn during their meeting
+time, then the meeting is said to be in the barn if the barn rule is set
+to ‘or’. The following describe each column of the resulting data frame:
 
 - `year` (`chr`): year under study,
 - `origin` (`chr`): mobile node data file containing this meeting,
@@ -192,8 +175,6 @@ following describe each column of the resulting data frame:
   `time_eps` of a base station log corresponding to the sender,
 - `barn` (`logi`): indicator of whether either the sender, receiver, or
   both was identified in the barn at the time of meeting.
-
-<img src="rmd/pipeline_folder/read_dulogs.png" width="100%" style="display: block; margin: auto;" />
 
 ### Preprocessing the dulogs data
 
@@ -244,30 +225,20 @@ column of the resulting data frame:
   the birds were closer in physical proximity,
 - `barn` (`logi`): indicator of whether either the sender, receiver, or
   both was identified in the barn at the time of meeting.
-- `i_node` (`chr`): tag with smallest sorted value,
-  ![i](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;i "i"),
-  must be coercible to a numeric,
-- `j_node` (`chr`): tag with largest sorted value,
-  ![j](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;j "j"),
-  must be coercible to a numeric,
-- `i_id` (`chr`): tag
-  ![i](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;i "i")
-  description from raw package data,
-- `j_id` (`chr`): tag
-  ![j](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;j "j")
-  description from raw package data
+- `i_node` (`chr`): tag with smallest sorted value, $i$, must be
+  coercible to a numeric,
+- `j_node` (`chr`): tag with largest sorted value, $j$, must be
+  coercible to a numeric,
+- `i_id` (`chr`): tag $i$ description from raw package data,
+- `j_id` (`chr`): tag $j$ description from raw package data
 - `i_barn` (`lgl`): indicator of whether the meeting time is within
-  `time_eps` of a base station log corresponding to tag
-  ![i](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;i "i")
+  `time_eps` of a base station log corresponding to tag $i$
 - `j_barn` (`lgl`): indicator of whether the meeting time is within
-  `time_eps` of a base station log corresponding to tag
-  ![j](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;j "j")
+  `time_eps` of a base station log corresponding to tag $j$
 - `received_date` (`POSIXct`): Unix timestamp for data retrieval,
   formatted as YYYY-MM-DD HH:MM:SS,
 - `swapped` (`lgl`): indicator of whether the values of `rx_node` and
   `tx_node` were swapped to create `i_node` and `j_node`.
-
-<img src="rmd/pipeline_folder/preprocess_dulogs.png" width="100%" style="display: block; margin: auto;" />
 
 The choice of `time_eps` in the reading step will not impact the
 preprocessing step unless `only_barn` is set to `TRUE`. In this case, a
@@ -327,20 +298,13 @@ and their next recorded meeting occurs at least `time_gap` seconds
 later, then the birds necessarily interacted twice. Otherwise, the birds
 interacted once for a longer period of time. The user should specify
 whether the interactions should be considered directed. If a meeting
-between bird
-![A](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;A "A")
-(the receiver, `rx_node`) and bird
-![B](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;B "B")
-(the sender, `tx_node`) should be treated differently than a meeting
-bird
-![B](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;B "B")
-(the receiver, `rx_node`) to bird
-![A](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;A "A")
-(the sender, `tx_node`), then the interactions should be directed.
-Furthermore, the user should specify whether loops should be retained.
-These are meetings where the same bird is logged as both the sender and
-the receiver. By default, interactions are assumed undirected and loops
-are excluded from consideration.
+between bird $A$ (the receiver, `rx_node`) and bird $B$ (the sender,
+`tx_node`) should be treated differently than a meeting bird $B$ (the
+receiver, `rx_node`) to bird $A$ (the sender, `tx_node`), then the
+interactions should be directed. Furthermore, the user should specify
+whether loops should be retained. These are meetings where the same bird
+is logged as both the sender and the receiver. By default, interactions
+are assumed undirected and loops are excluded from consideration.
 
 For now, the following describe each column of the resulting data frame:
 
@@ -365,8 +329,6 @@ For now, the following describe each column of the resulting data frame:
 - `rssi_med` (`dbl`): median RSSI in the interaction,
 - `rssi_mean` (`dbl`): mean RSSI in the interaction,
 - `rssi_max` (`dbl`): maximum RSSI in the interaction.
-
-<img src="rmd/pipeline_folder/construct_interactions.png" width="100%" style="display: block; margin: auto;" />
 
 ### Restructuring interactions as an edgelist
 
@@ -399,4 +361,6 @@ For now, the following describe each column of the resulting data frame:
 - `num_interactions` (`int`): total number of interactions of interest
   (i.e. satisfying the arguments of the function).
 
-<img src="rmd/pipeline_folder/as_edgelist.png" width="100%" style="display: block; margin: auto;" />
+## Acknkowledgements
+
+This work was supported in part by NSF award 1856229.

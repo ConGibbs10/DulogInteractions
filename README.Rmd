@@ -14,11 +14,6 @@ knitr::opts_chunk$set(
 devtools::load_all()
 ```
 
----
-author: "Connor Gibbs"
-date: '2022-08-02'
-output: html_document
----
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -26,7 +21,11 @@ library(dplyr)
 library(DulogInteractions)
 ```
 
-## Installing DulogsInteractions
+# DulogInteractions
+
+This R package is designed for processing data from Dulog Sensors.
+
+## Installing DulogInteractions
 
 Without uploading the Dulogs data as raw package data, installing the DulogsInteractions package is slightly more tricky. Follow these steps:
 
@@ -39,7 +38,7 @@ You should now have `DulogsInteractions` as a library and be able to recreate th
 
 ## DulogsInteractions Pipeline
 
-The DulogsInteractions pipeline is seperated into three steps:
+The DulogsInteractions pipeline is separated into three steps:
 
 1. Reading the data with `read_dulogs`.
 2. Preprocessing the data with `preprocess_dulogs`.
@@ -145,7 +144,7 @@ At the very least, this comma separated value file *must* contain columns:
 
 Other columns are tag attributes which will be helpful in the analysis phase. Examples may include things like sex of the bird, mating tag, and/or other identifying information.
 
-```{r, echo=FALSE, fig.align='center'}
+```{r, eval=FALSE,  echo=FALSE, fig.align='center'}
 knitr::include_graphics('rmd/pipeline_folder/birds_raw_csv.png')
 ```
 
@@ -164,7 +163,7 @@ At the very least, this comma separated value file *must* contain columns:
 * `end_day`: day when tags are turned off, formatted as DD,
 * `end_hour`: hour (using a [24-hour clock](https://en.wikipedia.org/wiki/24-hour_clock)) when tags are turned off, formatted as HH.
 
-```{r, echo=FALSE, fig.align='center'}
+```{r, eval=FALSE, echo=FALSE, fig.align='center'}
 knitr::include_graphics('rmd/pipeline_folder/timeframe_raw_csv.png')
 ```
 
@@ -183,7 +182,7 @@ There are two sources of data: mobile node data files and in range data files. M
 * `tx_barn` (`logi`): indicator of whether the meeting time is within `time_eps` of a base station log corresponding to the sender,
 * `barn` (`logi`): indicator of whether either the sender, receiver, or both was identified in the barn at the time of meeting.
 
-```{r, echo=FALSE, fig.align='center'}
+```{r, eval=FALSE, echo=FALSE, fig.align='center'}
 knitr::include_graphics('rmd/pipeline_folder/read_dulogs.png')
 ```
 
@@ -225,7 +224,7 @@ After removing meetings between birds according to the above specifications, the
 * `received_date` (`POSIXct`): Unix timestamp for data retrieval, formatted as YYYY-MM-DD HH:MM:SS,
 * `swapped` (`lgl`): indicator of whether the values of `rx_node` and `tx_node` were swapped to create `i_node` and `j_node`.
 
-```{r, echo=FALSE, fig.align='center'}
+```{r, eval=FALSE, echo=FALSE, fig.align='center'}
 knitr::include_graphics('rmd/pipeline_folder/preprocess_dulogs.png')
 ```
 
@@ -265,7 +264,7 @@ For now, the following describe each column of the resulting data frame:
 * `rssi_mean` (`dbl`): mean RSSI in the interaction,
 * `rssi_max` (`dbl`): maximum RSSI in the interaction.
 
-```{r, echo=FALSE, fig.align='center'}
+```{r, eval=FALSE, echo=FALSE, fig.align='center'}
 knitr::include_graphics('rmd/pipeline_folder/construct_interactions.png')
 ```
 
@@ -282,6 +281,12 @@ For now, the following describe each column of the resulting data frame:
 * `to_node` (`chr`): if directed, receiver tag; otherwise, tag with the largest sorted value,
 * `num_interactions` (`int`): total number of interactions of interest (i.e. satisfying the arguments of the function).
 
-```{r, echo=FALSE, fig.align='center'}
+```{r, eval=FALSE, echo=FALSE, fig.align='center'}
 knitr::include_graphics('rmd/pipeline_folder/as_edgelist.png')
 ```
+
+
+
+## Acknkowledgements
+
+This work was supported in part by NSF award 1856229.
