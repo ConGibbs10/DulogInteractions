@@ -1,15 +1,15 @@
 Package: DulogInteractions
 Title: Compiles data from dulog tags.
-Version: 0.0.1.9001
-Authors@R: 
-    person("Connor", "Gibbs", , "connor.gibbs@colostate.edu", role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0002-8852-5594"))
+Version: 0.0.1.9002
+Authors@R: c(person("Kayleigh", "Keller", email = "kayleigh.keller@colostate.edu", role = c("aut", "cre")),
+             person("Connor", "Gibbs", email="congibbs10@gmail.com", role = c("aut"),
+           comment = c(ORCID = "0000-0002-8852-5594")))
 Description: Dulog tags collect relational data between actors wearing the tags. This package compiles dulog data into meaningul interactions.
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.3
 Imports: 
     data.table,
     dplyr,

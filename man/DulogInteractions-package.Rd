@@ -9,7 +9,12 @@
 Dulog tags collect relational data between actors wearing the tags. This package compiles dulog data into meaningul interactions.
 }
 \author{
-\strong{Maintainer}: Connor Gibbs \email{connor.gibbs@colostate.edu} (\href{https://orcid.org/0000-0002-8852-5594}{ORCID})
+\strong{Maintainer}: Kayleigh Keller \email{kayleigh.keller@colostate.edu}
+
+Authors:
+\itemize{
+  \item Connor Gibbs \email{congibbs10@gmail.com} (\href{https://orcid.org/0000-0002-8852-5594}{ORCID})
+}
 
 }
 \keyword{internal}
