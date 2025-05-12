@@ -10,9 +10,8 @@
 #' @param time_eps A numeric for the maximum number of seconds the in range timestamp
 #' can deviate from the mobile node timestamp while claiming a bird is in the barn.
 #' @param barn_rule Rule for determining whether the meeting took place in barn.
-#' Option `in` signifies both birds need be in the barn; whereas option `both`
-#' signifies at least one bird needs to be in the barn; and option `out` means
-#' both birds need to be outside of the barn.
+#' Option `and` signifies both birds need be in the barn; whereas option `or`
+#' signifies at least one bird needs to be in the barn.
 #'
 #' @keywords internal
 #'
@@ -31,8 +30,8 @@ classify_barn_meetings <- function(mnData, irData, time_eps = 2, barn_rule = 'or
   if (length(time_eps) != 1 || !is.numeric(time_eps) || time_eps < 0) {
     stop('time_eps should be a nonnegative numeric scalar.')
   }
-  if (!barn_rule %in% c('in', 'both', 'out')) {
-    stop("barn_rule must be either 'in', 'both', or 'out'.")
+  if (!barn_rule %in% c('or', 'and')) {
+    stop("barn_rule must be either 'or' or 'and'.")
   }
 
   # mnData in long form
@@ -86,14 +85,12 @@ classify_barn_meetings <- function(mnData, irData, time_eps = 2, barn_rule = 'or
       by = c('year', 'meeting_date', 'tx_node')
     )
 
-  if (barn_rule == 'in') {
+  if (barn_rule == 'and') {
     mnData <- dplyr::mutate(mnData, barn = rx_barn & tx_barn)
-  } else if (barn_rule == 'both') {
+  } else if (barn_rule == 'or') {
     mnData <- dplyr::mutate(mnData, barn = rx_barn | tx_barn)
-  } else if (barn_rule == 'out') {
-    mnData <- dplyr::mutate(mnData, barn = !rx_barn & !tx_barn)
   } else {
-    stop("Argument barn_rule must be either 'in', 'both', or 'out'.")
+    stop("Argument barn_rule must be either 'and' or 'or'.")
   }
 
   # sort columns

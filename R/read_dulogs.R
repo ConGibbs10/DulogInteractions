@@ -19,9 +19,8 @@
 #' @param time_eps A numeric for the maximum number of seconds the in range timestamp
 #' can deviate from the mobile node timestamp while claiming a bird is in the barn.
 #' @param barn_rule Rule for determining whether the meeting took place in barn.
-#' Option `in` signifies both birds need be in the barn; whereas option `both`
-#' signifies at least one bird needs to be in the barn; and option `out` means
-#' both birds need to be outside of the barn.
+#' Option `and` signifies both birds need be in the barn; whereas option `or`
+#' signifies at least one bird needs to be in the barn.
 #' @param log File path and name for preprocessing log.
 #'
 #' @return A data frame.
@@ -42,7 +41,7 @@ read_dulogs <-
            patterns,
            year,
            time_eps = 2,
-           barn_rule = 'both',
+           barn_rule = 'or',
            log = NULL) {
     # check paths
     if (!all(names(paths) %in% c('mobilenode', 'inrange'))) {
@@ -59,8 +58,8 @@ read_dulogs <-
       stop('time_eps should be a nonnegative numeric scalar.')
     }
 
-    if (!barn_rule %in% c('in', 'both', 'out')) {
-      stop("barn_rule must be either 'in', 'both', 'out'.")
+    if (!barn_rule %in% c('or', 'and')) {
+      stop("barn_rule must be either 'or' or 'and'.")
     }
 
     # check year
