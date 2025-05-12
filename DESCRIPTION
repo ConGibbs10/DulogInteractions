@@ -1,6 +1,6 @@
 Package: DulogInteractions
 Title: Compiles data from dulog tags.
-Version: 0.0.1.9003
+Version: 0.0.1.9005
 Authors@R: c(person("Kayleigh", "Keller", email = "kayleigh.keller@colostate.edu", role = c("aut", "cre")),
              person("Connor", "Gibbs", email="congibbs10@gmail.com", role = c("aut"),
            comment = c(ORCID = "0000-0002-8852-5594")))

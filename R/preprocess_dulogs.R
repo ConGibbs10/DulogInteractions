@@ -18,7 +18,7 @@
 #' @param max_rssi Maximum RSSI to consider.
 #' @param start_time Earliest date and time to consider.
 #' @param end_time Latest date and time to consider.
-#' @param only_barn Logical indicating whether to keep only meetings in the barn.
+#' @param barn_filter String indicating whether to limit to meetings inside of barn. Options are "inside", "outside", or "both".
 #' @param time_eps A numeric for the maximum number of seconds the timestamp's can
 #' deviate while classifying a meeting as reciprocal (see `classify_reciprocal_meetings`).
 #' @param log File path and name for preprocessing log.
@@ -41,7 +41,7 @@
 #' max_rssi = 15,
 #' end_time = '0000-01-01 UTC',
 #' start_time = '9999-01-01 UTC',
-#' only_barn = FALSE
+#' barn_filter = "both"
 #' )
 #' }
 preprocess_dulogs <-
@@ -50,7 +50,7 @@ preprocess_dulogs <-
            max_rssi = 15,
            start_time = lubridate::make_datetime(year = 0000),
            end_time = lubridate::make_datetime(year = 9999),
-           only_barn = FALSE,
+           barn_filter = "both",
            time_eps = 2,
            log = NULL) {
     # check log is path
@@ -252,10 +252,14 @@ preprocess_dulogs <-
     dulogs <- fdulogs
 
     # meetings must be in the barn if requested
-    if (only_barn) {
+    if (barn_filter=="inside") {
       fdulogs <- dplyr::filter(dulogs, barn)
-    } else {
+    } else if (barn_filter=="outside") {
+      fdulogs <- dplyr::filter(dulogs, !barn)
+    } else if (barn_filter=="both") {
       fdulogs <- dulogs
+    } else {
+      stop("Improper value of 'barn_filter'")
     }
     if (!is.null(log)) {
       removals$only_barn <-
